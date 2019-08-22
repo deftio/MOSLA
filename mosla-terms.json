@@ -1,0 +1,23 @@
+{
+	"meta" : {
+		"version" : "0.0.1"
+	},
+	"dictionary" : {
+		"desc" : "This is the data dictionary for MOSLA.",
+		"terms" : [
+			["clause-name", "The clause-name is the human readable \"title\" of a specific clause."],
+			["clause-ID", "The clause-ID refers to specific language and terms.  This allows companies and users to know which specific type of binding a contract will have.  Note that clauses can change overtime by their version.  This is handled separately in the clause version number"],
+			["clause-version", "This is the specific implementation of a clause."]
+		]
+	},
+	"clauses" : [
+		{
+			"clause-name"  		: "End User Data Permissions",
+			"clause-ID"			: "A1",
+			"clause-version"	: "01x1",
+			"clause-short-desc" : "short desc",
+			"clause-long-desc"  : "long desc",
+			"clause-legal-hist" : []
+		}
+	]
+}

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link rel="icon" type="image/x-icon" href="./icon/favicon.ico" />
+
+<title>MOSLA</title>
+<!-- 
+	MOSLA demo page
+	(c) M A Chatterjee 2019 	deftio<at>deftio<dot>com
+	github:  https:github.com/deftio/MOSLA
+	web:     https:deftio.com/MOSLA
+ -->
+
+<link   rel="stylesheet" type="text/css" href="./libs/bitwrench.css" /> 
+<script type="text/javascript" src="./libs/bitwrench.min.js" ></script> <!-- html page formatting & related -->
+</head>
+<body class="bw-def-page-setup bw-font-sans-serif">
+<div  class="bw-container">
+	<div class="bw-col-12">
+		<br>		
+		<div class="bw-col-8;" style="; height:100px;"> 
+				<div style="background-image:url('icon/MOSLA.png');  background-repeat: no-repeat; width: 100%; height:100%;  background-size: contain; background-position: center center: " class="bw-col-4"></div>
+			
+			<h1>MOSLA : Modular Open Service License Agreement</h1>
+		</div><br><br><br><br>
+			
+		MOSLA is a framework for creating standardize user service agreements about data usage and permisions.
+		<br>
+		MOSLA demo ...<br><br>
+		<br>
+		
+		<br><br>
+		<div class="bw-center" style="font-size: 9pt">MOSLA&nbsp;&nbsp;&copy&nbsp;2019-<span id="cdate"></span>&nbsp; M A Chatterjee</div><br>	
+	</div>
+</div>
+<script type="text/javascript">
+	var gPageData={};
+	bw.getFile("mosla-terms.json",function(x){gPageData["terms"]=x; try{x=JSON.parse(x); gPageData.terms=x;}catch(e){console.log(e)}})
+	bw.DOMGetElements("#cdate")[0].innerHTML = (new Date()).getFullYear();
+	
+</script>
+
+</body>
+</html>
