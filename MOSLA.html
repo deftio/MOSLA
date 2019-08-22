@@ -65,11 +65,18 @@
 		"service"		: urlprm("service"," The Service"),
 		"jurisdiction"	: urlprm("jurisdiction", "State of Ohio, United States of America"),
 		"party1sig" 	: urlprm("party1sig","none"),
-		"party1sig" 	: urlprm("party2sig","none"),
+		"party2sig" 	: urlprm("party2sig","none"),
 	}
 
 	// generated contract portions
-	contract["preamble"] 	= "This is a agreement between "+ contract["party1"] + " (Party1) " + " and "+ contract["party2"] + " (Party2) to provide " + contract["service"] + " which shall commence on this date "+contract["startDate"]+" and having jurisdiction in "+contract["jurisdiction"];
+	contract["preamble"] 	= "This is an agreement between "+ bw.html(["span",{style:"font-weight:700"},contract["party1"] + " (Party1) "]) + " and "+ bw.html(["span",{style:"font-weight:700"},contract["party2"] + " (Party2)"])+" to provide " + contract["service"] + " which shall commence on this date "+contract["startDate"]+" and having jurisdiction in "+contract["jurisdiction"];
+
+	contract["signing"]		= [
+			"<br>",
+			["div",{},"by " + contract["party1"]+ "<br>esignature: " + contract["party1sig"]],
+			"<br><br>",
+			["div",{},"by " + contract["party2"]+ "<br>esignature:" + contract["party2sig"]],
+		];
 
 	//======================================================
 	//render the  contract
@@ -83,7 +90,7 @@
 			htm += clause2html({index:j+1, ID:t[j], name: bw.loremIpsum(bw.random(15,45),bw.random(18,240),true), desc: bw.loremIpsum(bw.random(125,533),0,true)});			
 	}
 	catch(e) { console.log("no terms...")}
-	
+	htm += bw.htmla(contract["signing"]);
 	bw.DOM("#contract",bw.html(["div",{class:"bw-col-7"},htm]));
 	bw.DOM("#cdate",(new Date()).getFullYear().toString() );
 	
