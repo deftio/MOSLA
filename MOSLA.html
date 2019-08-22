@@ -46,12 +46,13 @@
 	bw.getFile("mosla-terms.json",function(x){gPageData["terms"]=x; try{x=JSON.parse(x); gPageData.terms=x;}catch(e){console.log(e)}})
 
 	var contract = {};
-	contract["party1"]  	= bw.getURLParam("party1","Honorable Company Corporation");
-	contract["party2"]  	= bw.getURLParam("party2","Super User");
-	contract["startDate"]	= bw.getURLParam("startDate",Date().toString());
-	contract["title"] 		= bw.getURLParam("title","Modular Enduser License Contract");
-	contract["service"]  	= bw.getURLParam("service"," The Service");
-	contract["jurisdiction"]= bw.getURLParam("jurisdiction", "State of Ohio, United States of America");
+
+	contract["party1"]  	= decodeURIComponent(bw.getURLParam("party1","Honorable Company Corporation"));
+	contract["party2"]  	= decodeURIComponent(bw.getURLParam("party2","Super User"));
+	contract["startDate"]	= decodeURIComponent(bw.getURLParam("startDate",Date().toString()));
+	contract["title"] 		= decodeURIComponent(bw.getURLParam("title","Modular Enduser License Contract"));
+	contract["service"]  	= decodeURIComponent(bw.getURLParam("service"," The Service"));
+	contract["jurisdiction"]= decodeURIComponent(bw.getURLParam("jurisdiction", "State of Ohio, United States of America"));
 	contract["preamble"] 	= "This is a agreement between "+ contract["party1"] + " (Party1) " + " and "+ contract["party2"] + " (Party2) to provide " + contract["service"] + " which shall commence on this date "+contract["startDate"]+" and having jurisdiction in "+contract["jurisdiction"];
 
 
@@ -61,8 +62,8 @@
 	htm += "<br><br>";
 	htm = bw.html(["div",{class:"bw-col-7"},htm]);
 	try {
-		contract["clauses"] 	= bw.getURLParam("clauses","demo");
-		if (contract["clauses"] == "demo") {
+		contract["terms"] 	= decodeURIComponent(bw.getURLParam("terms","demo"));
+		if (contract["terms"] == "demo") {
 			var i, max=8, cls="";
 			for (i=0; i<max; i++ ) {
 				cls = [ //1) A13.03  “Cookies Local Only” : “we use your cookies only on our website only but never share them with a 3rd party” 
@@ -76,9 +77,24 @@
 				htm += cls;
 			}
 		}
+		else { // try to parse 
+			var j,t = contract["terms"].split("+");
+			for (j=0; j<t.length; j++ ) {
+				cls = [ //1) A13.03  “Cookies Local Only” : “we use your cookies only on our website only but never share them with a 3rd party” 
+					["span",{style:"font-weight:700"},j+") "],  // number of clause in contract
+					["span",{style:"font-weight:700"},t[j] +" : "], // clause ID
+					["span",{style:"font-weight:700"},bw.loremIpsum(bw.random(15,45),bw.random(18,240),true)+" - "],  // clase title
+					["span","",bw.loremIpsum(bw.random(125,533),0,true)], // clause body
+					"<br><br>"
+				]
+				cls = bw.htmla(cls);
+				htm += cls;
+			}
+
+		}
 	}
 	catch(e) {
-		contract["clauses"] 	= [];
+		contract["terms"] 	= [];
 	}
 	
 	bw.DOM("#contract",htm);
