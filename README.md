@@ -13,7 +13,6 @@ MOSLA is a compentized framework for End User License Agreements and some simila
 * Allows each party to completely describe full MOSLA as a URL.  e.g. posla.org/posla?clauses=A1.02&C14.02&D01.11&party1=John.Smith&partry2=ABCorp
 * Traceability - as different clauses are litigatated or updated the legal reasoning and outcomes can be shared with the community and information attached to the clauses in the publicly available distribution.
 
-
 ## Prototype / Demo
 
 A demo is hosted here: [MOSLA Demo](./MOSLA.html)  
@@ -21,7 +20,7 @@ A demo is hosted here: [MOSLA Demo](./MOSLA.html)
 All source code, including this documentation is hosted on github here: [MOSLA](https://github.com/deftio/mosla)  
 
 ## Usage
-
+MOSLA is designed to be used by any company wishing to have a standardized license agreement.  When displaying a EULA or service terms page a link to the MOSLA site (with party names) can be used and also emailed to the client so they have a stable copy.
 
 ## FAQ / Questions
 
