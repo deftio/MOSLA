@@ -43,6 +43,26 @@
 		return s;
 	}
 
+	/**
+		clause2html needs a dict like this:
+		{
+			index: number, // eg 3
+			ID : string, // eg H1.23
+			name : string,
+			desc : string
+		}
+	 */
+	var clause2html = function(clause) {
+			var cls = [ //1) A13.03  “Cookies Local Only” : “we use your cookies only on our website only but never share them with a 3rd party” 
+					["span",{style:"font-weight:700"},clause.index+") "],  // number of clause in contract
+					["span",{style:"font-weight:700"},clause.ID +" : "], // clause ID
+					["span",{style:"font-weight:700"},clause.name+" - "],  // clase title
+					["span","",clause.desc], // clause body
+					"<br><br>"
+				]
+			return bw.htmla(cls);
+	}
+
 	bw.getFile("mosla-terms.json",function(x){gPageData["terms"]=x; try{x=JSON.parse(x); gPageData.terms=x;}catch(e){console.log(e)}})
 
 	var contract = {};
@@ -58,39 +78,22 @@
 
 	//generate contract
 	htm += bw.html(["h2","",contract["title"]]);
-	htm += bw.html(["div","",contract["preamble"]]);
+	htm += bw.html(["div",{class:"bw-col-7"},contract["preamble"]]);
 	htm += "<br><br>";
 	htm = bw.html(["div",{class:"bw-col-7"},htm]);
 	try {
-		contract["terms"] 	= decodeURIComponent(bw.getURLParam("terms","demo"));
-		if (contract["terms"] == "demo") {
+		contract["terms"] 	= decodeURIComponent(bw.getURLParam("terms",""));
+		/*if (contract["terms"] == "demo") {
 			var i, max=8, cls="";
-			for (i=0; i<max; i++ ) {
-				cls = [ //1) A13.03  “Cookies Local Only” : “we use your cookies only on our website only but never share them with a 3rd party” 
-					["span",{style:"font-weight:700"},i+") "],  // number of clause in contract
-					["span",{style:"font-weight:700"},randClauseNum() +" : "], // clause ID
-					["span",{style:"font-weight:700"},bw.loremIpsum(bw.random(15,45),bw.random(18,240),true)+" - "],  // clase title
-					["span","",bw.loremIpsum(bw.random(125,533),0,true)], // clause body
-					"<br><br>"
-				]
-				cls = bw.htmla(cls);
-				htm += cls;
-			}
+			for (i=0; i<max; i++ ) 
+				htm += clause2html({index:i+1, ID:randClauseNum(), name: bw.loremIpsum(bw.random(15,45),bw.random(18,240),true), desc: bw.loremIpsum(bw.random(125,533),0,true)});
 		}
 		else { // try to parse 
+		*/
+		{
 			var j,t = contract["terms"].split("+");
-			for (j=0; j<t.length; j++ ) {
-				cls = [ //1) A13.03  “Cookies Local Only” : “we use your cookies only on our website only but never share them with a 3rd party” 
-					["span",{style:"font-weight:700"},j+") "],  // number of clause in contract
-					["span",{style:"font-weight:700"},t[j] +" : "], // clause ID
-					["span",{style:"font-weight:700"},bw.loremIpsum(bw.random(15,45),bw.random(18,240),true)+" - "],  // clase title
-					["span","",bw.loremIpsum(bw.random(125,533),0,true)], // clause body
-					"<br><br>"
-				]
-				cls = bw.htmla(cls);
-				htm += cls;
-			}
-
+			for (j=0; j<t.length; j++ ) 
+				htm += clause2html({index:j+1, ID:t[j], name: bw.loremIpsum(bw.random(15,45),bw.random(18,240),true), desc: bw.loremIpsum(bw.random(125,533),0,true)});			
 		}
 	}
 	catch(e) {
