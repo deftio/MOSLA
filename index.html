@@ -1,45 +1,92 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<link rel="icon" type="image/x-icon" href="./icon/favicon.ico" />
+<html><head><style>
+.bw-def-page-setup{height: 100%;  width: 94%;  margin: 0 auto;  padding-left: 2%; padding-right:2%; left: 0;  top: 1%;}
+.bw-font-serif{font-family: Times New Roman, Times, serif;}
+.bw-font-sans-serif{font-family: Arial, Helvetica, sans-serif }
+.bw-h1{ font-size: 2.312rem;}
+.bw-h2{ font-size: 1.965rem;}
+.bw-h3{ font-size: 1.67rem;}
+.bw-h4{ font-size: 1.419rem;}
+.bw-h5{ font-size: 1.206rem;}
+.bw-h6{ font-size: 1.025rem;}
+.bw-color-color {color:#000}
+.bw-color-background-color {background-color:#ddd}
+.bw-color-active {active:#222}
+.bw-thm-light {
+  color:#020202 !important;
+  background-color:#e2e2e2 !important;
+}
+.bw-thm-dark {
+  color:#e2e2e2 !important;
+  background-color:#020202 !important;
+}
+.bw-left       { text-align: left;                            }
+.bw-right      { text-align: right;                           }
+.bw-center     { text-align: center; margin: 0 auto;          }
+.bw-justify    { text-align: justify;                         }
+.bw-code       { font-family:monospace; white-space:pre-wrap; }
+.bw-pad1       { padding-left: 1%; padding-right: 1%;         }
+.bw-table-stripe    tr:nth-child(even){  background-color: #f0f0f0}
+.bw-table-col0-bold tr td:first-child {   font-weight: 700;}
+.bw-table-compact   { border-collapse: collapse; border-spacing: 0;}
+.bw-table-sort-upa::after { content: "\2191"; }
+.bw-table-sort-dna::after { content: "\2193"; }
+.bw-table-sort-xxa::after { content: "\00a0"; }
+.bw-tab-item-list    { margin: 0; padding-inline-start:0}
+.bw-tab-item         { display:inline; padding-top:5px; padding-left:10px; padding-right: 10px;  border-top-right-radius: 7px; border-top-left-radius: 7px;}
+.bw-tab-active       {/* padding-top:4px; padding-left:6px; padding-right:6px; padding-bottom:0;  */ font-weight:700;}
+.bw-tab:hover        { cursor: pointer;  font-weight: 700;/* border: 1px  solid #bbb; */}
+.bw-tab-content-list { margin: 0;  }
+.bw-tab-content      { display: none; margin-top:-1px; border-radius:0  }
+.bw-tab-content, .bw-tab-active       {background-color: #ddd}
+.bw-container  { margin: 0 auto;  }
+.bw-row        { width: 100%; display: block;  }
+.bw-row [class^="bw-col"] {  float: left;}
+.bw-col-1 {width:8.333%; }
+.bw-col-2 {width:16.666%; }
+.bw-col-3 {width:25%; }
+.bw-col-4 {width:33.333%; }
+.bw-col-5 {width:41.666%; }
+.bw-col-6 {width:50%; }
+.bw-col-7 {width:58.333%; }
+.bw-col-8 {width:66.666%; }
+.bw-col-9 {width:75%; }
+.bw-col-10 {width:83.333%; }
+.bw-col-11 {width:91.666%; }
+.bw-col-12 {width:100%; }
+.bw-row::after { content: "";   display: table; clear: both;}
+.bw-box-1 {padding-top: 10px; padding-bottom: 10px; border-radius: 8px;}
+.bw-hide   { display: none;}
+.bw-show   { display: block;}
+@media only screen and (min-width: 540px) {  .bw-container {    width: 94%;  }}
+@media only screen and (min-width: 720px) {  .bw-container {    width: 90%;  }}
+@media only screen and (min-width: 960px) {  .bw-container {    width: 86%;  }}
 
-<title>MOSLA</title>
-<!-- 
-	MOSLA intro page
-	(c) M A Chatterjee 2019 	deftio<at>deftio<dot>com
-	github:  https:github.com/deftio/MOSLA
-	web:     https:deftio.com/MOSLA
- -->
-
-<link   rel="stylesheet" type="text/css" href="./libs/bitwrench.css" /> 
-<script type="text/javascript" src="./libs/bitwrench.js" ></script> <!-- html page formatting & related -->
-</head>
-<body class="bw-def-page-setup bw-font-sans-serif">
-<div  class="bw-container">
-	<div class="bw-col-12">
-		<br>		
-		<div class="bw-col-8;" style="; height:100px;"> 
-				<div style="background-image:url('icon/MOSLA.png');  background-repeat: no-repeat; width: 100%; height:100%;  background-size: contain; background-position: center center: " class="bw-col-4"></div>
-			
-			<h1>MOSLA : Modular Open Services License Agreement</h1>
-		</div><br><br><br><br>
-			
-		MOSLA is a framework for creating standardize user service agreements about data usage and permisions.
-		<br>
-		<h1>Intro</h1>
-		<br>
-		MOSLA ...<br><br>
-		<br>
-		
-		<br><br>
-		<div class="bw-center" style="font-size: 9pt">MOSLA&nbsp;&nbsp;&copy&nbsp;2019-<span id="cdate"></span>&nbsp; M A Chatterjee</div><br>	
-	</div>
-</div>
-<script type="text/javascript">
-	bw.DOMGetElements("#cdate")[0].innerHTML = (new Date()).getFullYear();
-	
-</script>
-
-</body>
-</html>
+</style></head><body class="bw-def-page-setup bw-font-sans-serif"><br><br><p><a href="https://www.deftio.com/mosla"><img src="./icon/MOSLA.png" width="8%"></img></a><br></p>
+<p><a href="https://opensource.org/licenses/BSD-2-Clause"><img src="https://img.shields.io/badge/License-BSD%202--Clause-blue.svg" alt="License" /></a></p>
+<h1 id="moslamodularopenserviceslicenseagreement">MOSLA - Modular Open Services License Agreement</h1>
+<p>MOSLA is a compentized framework for End User License Agreements and some similar standardized agreement contracts which has compentized the different types of clausese that the two parties agree to.  </p>
+<h2 id="features">Features</h2>
+<ul>
+<li>Each clause contains a set of fixed attributes which are meant to be human readable in a very short period of time.</li>
+<li>Allows each party to completely describe full MOSLA as a URL.  e.g. posla.org/posla?clauses=A1.02&amp;C14.02&amp;D01.11&amp;party1=John.Smith&amp;partry2=ABCorp</li>
+<li>Traceability - as different clauses are litigatated or updated the legal reasoning and outcomes can be shared with the community and information attached to the clauses in the publicly available distribution.</li>
+</ul>
+<h2 id="prototypedemo">Prototype / Demo</h2>
+<p>A demo is hosted here: <a href="./MOSLA.html">MOSLA Demo</a>  </p>
+<p>All source code, including this documentation is hosted on github here: <a href="https://github.com/deftio/mosla">MOSLA</a>  </p>
+<h2 id="usage">Usage</h2>
+<h2 id="faqquestions">FAQ / Questions</h2>
+<p>Q: Why can't we just use an existing EULA or similar agreement
+A: You can - nothing in this prevents that - the purpose is to create a rigid standardized framework for agreeing to very common web and application clauses.</p>
+<p>Q: I can use 90% of the clauses but I need to add a couple custom clauses.  Why isn't this supported?
+A: By design a committee process is used to add new approved clauses or to updated existing ones.   This insures that users of the MOSLA always get standardized clauses which have been vetted by large audience.  If you wish to have a new clause added then submit this and the reasoning to the community process for future inclusion.</p>
+<p>Q: How is existing named clause changed?
+A: As long as the clause addresses the same type of contractual issues, then the new update is submited as a change number (once approved).  For example:
+    A17.01 becomes A17.02.   While the change is not yet approved you will see draft forms such as A17.02x1 (x means experimental) A17.02x1 and finally A17.02c (candidate for final  review).  Once a new version of the clause is finalized it is published as A17.02 without any suffixes.  Note that the old version A17.01 is still valid and is still available to the community in its unchanged form.  </p>
+<h2 id="acknowledgements">Acknowledgements</h2>
+<p>Much work has been done on standardizing various agreements in industry.  Please visit the Open Source foundation (www.opensource.org) for how this has been done for copy left software.</p>
+<h2 id="license">License</h2>
+<p>(OSI Approved BSD 2-clause)</p>
+<h2 id="contributers">Contributers</h2>
+<p>Manjirnath A Chatterjee<br />
+Kona F Pance</p></body></html>
