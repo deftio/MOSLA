@@ -3,13 +3,14 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <link rel="icon" type="image/x-icon" href="./icon/favicon.ico" />
-
 <title>MOSLA</title>
 <!-- 
 	MOSLA demo page
 	(c) M A Chatterjee 2019 	deftio<at>deftio<dot>com
-	github:  https:github.com/deftio/MOSLA
-	web:     https:deftio.com/MOSLA
+	github:  https:github.com/deftio/mosla
+	web:     https:deftio.com/mosla
+
+	BSD2 License
  -->
 
 <link   rel="stylesheet" type="text/css" href="./libs/bitwrench.css" /> 
@@ -34,18 +35,9 @@
 </div>
 <script type="text/javascript">
 	var gPageData={},htm="";
-	var randClauseNum = function() {
-		var s ="";
-		s+= "ABCDEFGHIJKLMNOPQRSTUVWXYZ".charAt(bw.random(1,26));
-		s+= "ABCDEFGHIJKLMNOPQRSTUVWXYZ".charAt(bw.random(1,26));
-		s+= ".";
-		s+= bw.random(1,123);
-		return s;
-	}
+	
 
-	/**
-		clause2html needs a dict like this:
-		{
+	/** clause2html needs a dict like this: 	{
 			index: number, // eg 3
 			ID : string, // eg H1.23
 			name : string,
@@ -55,55 +47,46 @@
 	var clause2html = function(clause) {
 			var cls = [ //1) A13.03  “Cookies Local Only” : “we use your cookies only on our website only but never share them with a 3rd party” 
 					["span",{style:"font-weight:700"},clause.index+") "],  // number of clause in contract
-					["span",{style:"font-weight:700"},clause.ID +" : "], // clause ID
+					["span",{style:"font-weight:700"},clause.ID +" : "],   // clause ID
 					["span",{style:"font-weight:700"},clause.name+" - "],  // clase title
 					["span","",clause.desc], // clause body
 					"<br><br>"
 				]
 			return bw.htmla(cls);
 	}
-
+	var urlprm = function(p,d) {return decodeURIComponent(bw.getURLParam(p,d))};
 	bw.getFile("mosla-terms.json",function(x){gPageData["terms"]=x; try{x=JSON.parse(x); gPageData.terms=x;}catch(e){console.log(e)}})
 
-	var contract = {};
+	var contract = {
+		"party1"		: urlprm("party1","Honorable Company Corporation"),
+		"party2"		: urlprm("party2","Super User"),
+		"startDate"		: urlprm("startDate",Date().toString()),
+		"title"			: urlprm("title","Modular Enduser License Contract"),
+		"service"		: urlprm("service"," The Service"),
+		"jurisdiction"	: urlprm("jurisdiction", "State of Ohio, United States of America"),
+		"party1sig" 	: urlprm("party1sig","none"),
+		"party1sig" 	: urlprm("party2sig","none"),
+	}
 
-	contract["party1"]  	= decodeURIComponent(bw.getURLParam("party1","Honorable Company Corporation"));
-	contract["party2"]  	= decodeURIComponent(bw.getURLParam("party2","Super User"));
-	contract["startDate"]	= decodeURIComponent(bw.getURLParam("startDate",Date().toString()));
-	contract["title"] 		= decodeURIComponent(bw.getURLParam("title","Modular Enduser License Contract"));
-	contract["service"]  	= decodeURIComponent(bw.getURLParam("service"," The Service"));
-	contract["jurisdiction"]= decodeURIComponent(bw.getURLParam("jurisdiction", "State of Ohio, United States of America"));
+	// generated contract portions
 	contract["preamble"] 	= "This is a agreement between "+ contract["party1"] + " (Party1) " + " and "+ contract["party2"] + " (Party2) to provide " + contract["service"] + " which shall commence on this date "+contract["startDate"]+" and having jurisdiction in "+contract["jurisdiction"];
 
-
-	//generate contract
+	//======================================================
+	//render the  contract
 	htm += bw.html(["h2","",contract["title"]]);
-	htm += bw.html(["div",{class:"bw-col-7"},contract["preamble"]]);
+	htm += bw.html(["div","",contract["preamble"]]);
 	htm += "<br><br>";
-	htm = bw.html(["div",{class:"bw-col-7"},htm]);
 	try {
 		contract["terms"] 	= decodeURIComponent(bw.getURLParam("terms",""));
-		/*if (contract["terms"] == "demo") {
-			var i, max=8, cls="";
-			for (i=0; i<max; i++ ) 
-				htm += clause2html({index:i+1, ID:randClauseNum(), name: bw.loremIpsum(bw.random(15,45),bw.random(18,240),true), desc: bw.loremIpsum(bw.random(125,533),0,true)});
-		}
-		else { // try to parse 
-		*/
-		{
-			var j,t = contract["terms"].split("+");
-			for (j=0; j<t.length; j++ ) 
-				htm += clause2html({index:j+1, ID:t[j], name: bw.loremIpsum(bw.random(15,45),bw.random(18,240),true), desc: bw.loremIpsum(bw.random(125,533),0,true)});			
-		}
+		var j,t = contract["terms"].split("+");
+		for (j=0; j<t.length; j++ ) 
+			htm += clause2html({index:j+1, ID:t[j], name: bw.loremIpsum(bw.random(15,45),bw.random(18,240),true), desc: bw.loremIpsum(bw.random(125,533),0,true)});			
 	}
-	catch(e) {
-		contract["terms"] 	= [];
-	}
+	catch(e) { console.log("no terms...")}
 	
-	bw.DOM("#contract",htm);
+	bw.DOM("#contract",bw.html(["div",{class:"bw-col-7"},htm]));
 	bw.DOM("#cdate",(new Date()).getFullYear().toString() );
 	
 </script>
-
 </body>
 </html>
