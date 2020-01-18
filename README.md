@@ -15,7 +15,7 @@ MOSLA is a compentized framework for End User License Agreements and some simila
 
 ## Prototype / Demo
 
-A demo is hosted here: [MOSLA Demo](./MOSLA.html)  
+A demo is hosted here: [MOSLA Demo](./MOSLA.html?terms=demo)  
 
 All source code, including this documentation is hosted on github here: [MOSLA](https://github.com/deftio/mosla)  
 
