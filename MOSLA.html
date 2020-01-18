@@ -6,6 +6,8 @@
 <title>MOSLA</title>
 <!-- 
 	MOSLA demo page
+	see README.md at source repo for more details on what this page is about.
+
 	(c) M A Chatterjee 2019 	deftio<at>deftio<dot>com
 	github:  https:github.com/deftio/mosla
 	web:     https:deftio.com/mosla
@@ -14,7 +16,7 @@
  -->
 
 <link   rel="stylesheet" type="text/css" href="./libs/bitwrench.css" /> 
-<script type="text/javascript" src="./libs/bitwrench.min.js" ></script> <!-- html page formatting & related -->
+<script src="https://unpkg.com/bitwrench/bitwrench.min.js"></script><!-- html page formatting & related -->
 </head>
 <body class="bw-def-page-setup bw-font-sans-serif">
 <div  class="bw-container">
@@ -30,14 +32,16 @@
 		<br>
 		
 		<br><br>
-		<div class="bw-center" style="font-size: 9pt">MOSLA&nbsp;&nbsp;&copy&nbsp;<span id="cdate"></span>&nbsp; deftio llc</div><br>	
+		<div class="bw-center" style="font-size: 9pt">MOSLA&nbsp;&nbsp;<span id="cdate"></span>&nbsp; The Open Source Contract</div><br>	
 	</div>
 </div>
 <script type="text/javascript">
-	var gPageData={},htm="";
+	var gPageData={pageLoadTime: (new Date()).toString(), contractTermsLoaded:[]}; // global page data storage
 	
-
-	/** clause2html needs a dict like this: 	{
+	//============================
+	/** clause2html() - generate an html formatted contract clause
+		needs a dict like this:
+		{
 			index: number, // eg 3
 			ID : string, // eg H1.23
 			name : string,
@@ -54,44 +58,145 @@
 				]
 			return bw.htmla(cls);
 	}
-	var urlprm = function(p,d) {return decodeURIComponent(bw.getURLParam(p,d))};
-	bw.getFile("mosla-terms.json",function(x){gPageData["terms"]=x; try{x=JSON.parse(x); gPageData.terms=x;}catch(e){console.log(e)}})
 
-	var contract = {
-		"party1"		: urlprm("party1","Honorable Company Corporation"),
-		"party2"		: urlprm("party2","Super User"),
-		"startDate"		: urlprm("startDate",Date().toString()),
-		"title"			: urlprm("title","Modular Enduser License Contract"),
-		"service"		: urlprm("service"," The Service"),
-		"jurisdiction"	: urlprm("jurisdiction", "State of Ohio, United States of America"),
-		"party1sig" 	: urlprm("party1sig","none"),
-		"party2sig" 	: urlprm("party2sig","none"),
+	/** findClause() - generate an html formatted contract clause
+		needs a dict like this:
+		{
+			index: number, // eg 3
+			ID : string, // eg H1.23
+			name : string,
+			desc : string
+		}
+	 */
+	
+	var findClause = function(clauseID, clauseArray) {
+		var x, r=null;
+		for (x=0; x< clauseArray.length; x++) {
+			if (clauseID == clauseArray[x]["clause-ID"])
+				r = clauseArray[x];
+				break;
+		}
+		return r;
 	}
+	//============================
+	/** getContractURLParameters() - get contract parameters from the URL
 
-	// generated contract portions
-	contract["preamble"] 	= "This is an agreement between "+ bw.html(["span",{style:"font-weight:700"},contract["party1"] + " (Party1) "]) + " and "+ bw.html(["span",{style:"font-weight:700"},contract["party2"] + " (Party2)"])+" to provide " + contract["service"] + " which shall commence on this date "+contract["startDate"]+" and having jurisdiction in "+contract["jurisdiction"];
-
-	contract["signing"]		= [
-			"<br>",
-			["div",{},"by " + contract["party1"]+ "<br>esignature: " + contract["party1sig"]],
-			"<br><br>",
-			["div",{},"by " + contract["party2"]+ "<br>esignature:" + contract["party2sig"]],
-		];
-
+		this function looks at the passed parameters and sees if they are in the URL somewhere, if so the value from the URL is used else the default 
+		from the dictionary is used.
+	*/
+	var getContractURLParameters= function (c) {
+		var i,r={}; 
+		for (i in c)
+			r[i]=bw.getURLParam(c[i][0],c[i][1]);
+		return r;
+	}
+	//default contract as a JSON construct 
+	// {variable: ["URLVariableName",defaultValueIfNotInURL]}
+	var contractDefaults = {
+		"party1"		: ["party1","Honorable Company Corporation"],
+		"party2"		: ["party2","User Name"],
+		"startDate"		: ["startDate",Date().toString()],
+		"title"			: ["title","Modular Enduser License Contract"],
+		"service"		: ["service"," The Service"],
+		"jurisdiction"	: ["jurisdiction", "State of Ohio, United States of America"],
+		"party1sig" 	: ["party1sig","none"],
+		"party2sig" 	: ["party2sig","none"],
+		"seal"			: ["seal",null]
+	}
+	
 	//======================================================
-	//render the  contract
-	htm += bw.html(["h2","",contract["title"]]);
-	htm += bw.html(["div","",contract["preamble"]]);
-	htm += "<br><br>";
-	try {
-		contract["terms"] 	= decodeURIComponent(bw.getURLParam("terms",""));
-		var j,t = contract["terms"].split("+");
-		for (j=0; j<t.length; j++ ) 
-			htm += clause2html({index:j+1, ID:t[j], name: bw.loremIpsum(bw.random(15,45),bw.random(18,240),true), desc: bw.loremIpsum(bw.random(125,533),0,true)});			
+	//render the  contract from JSON to HTML
+	var renderContractHTML = function (contract) {
+
+		var htm = "",j,t;
+		htm += bw.html(["h2","",contract["title"]]);
+		htm += bw.html(["div","",contract["preamble"]]);
+		htm += "<br><br>";
+		try {
+			if (contract["terms"] == "demo") { // show a demo contract, in future it just shows randomized real clauses
+				for (j=0; j<7; j++ ) 
+				htm += clause2html(
+					{
+						index:j,  // enumerated clause number
+						ID: "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[j%26]+bw.random(0,15),    // ID of the clause, comes from URL, must match exactly a clause in the approved clause dict
+						name: bw.loremIpsum(bw.random(15,45),bw.random(18,240),true), // name of the clause
+						desc: bw.loremIpsum(bw.random(125,533),0,true) // description of the clause (body with legal language)
+					});
+			}
+			else  { // real contract terms rendered here
+
+			 	for (j=0; j<contract["terms-data"].length; j++ ) {
+					var cl = contract["terms-data"][j];
+					if (cl != null) {  // if we found it.
+						htm += clause2html( // render it
+							{
+								index:j,  // enumerated clause number in this contract e.g. "2"
+								ID: cl["clause-ID"],    // ID of the clause, comes from URL, must match exactly a clause in the approved clause dict
+								name: cl["clause-name"] , // name of the clause
+								desc: cl["clause-long-desc"] // description of the clause (body with legal language)
+							});			
+
+					}
+					else
+						throw(t[j]+"clause-ID lookup failed")
+				}
+			}
+		}
+		catch(e) { 
+			htm+=bw.html(["h2",{style:"color:red,font-weight:700"},"<br>Error Contract Terms error or mismatch." + e.toString()])
+		}
+		htm += bw.htmla(contract["signing"]);
+		return htm;
 	}
-	catch(e) { console.log("no terms...")}
-	htm += bw.htmla(contract["signing"]);
-	bw.DOM("#contract",bw.html(["div",{class:"bw-col-7"},htm]));
+
+
+	//============================
+	//============================
+	//now generate the actual contract we are looking at from the URL and static approved terms data.
+	//This is a demo.  Note that an actual contract should have good loading, signing, coding practicies etc.
+	
+	var contractData = getContractURLParameters(contractDefaults); // fetch the parties, jurisdictions, etc from the URL
+	gPageData["contractData"] = contractData; // create a global reference
+
+	//generate the top portion boilerplate
+	contractData["preamble"] 	= "This is an agreement between "+ 
+		bw.html(["span",{style:"font-weight:700"},contractData["party1"] + " (Party1) "]) + " and "+ 
+		bw.html(["span",{style:"font-weight:700"},contractData["party2"] + " (Party2)"])  + " to provide " + 
+		contractData["service"] + " which shall commence on this date "+
+		contractData["startDate"]+" and having jurisdiction in "+contractData["jurisdiction"];
+
+	//generate the signing portion
+	contractData["signing"]		= [
+			"<br>",
+			["div",{},"by " + contractData["party1"]+ "<br>esignature: " + contractData["party1sig"]],
+			"<br><br>",
+			["div",{},"by " + contractData["party2"]+ "<br>esignature:" + contractData["party2sig"]],
+		];
+	
+
+	//============================
+	// now load the tersm file (its in mosla-terms.json in this demo). Once we get that we render the contract in the callback function
+	bw.getFile("mosla-terms.json",function(x){
+		gPageData["mosla-terms"]=x; 
+		try{x=JSON.parse(x); gPageData["mosla-terms"]=x; }catch(e){console.log(e)}
+		gPageData.contractData["terms"] 		= bw.getURLParam("terms","");
+		gPageData.contractData["terms-data"] 	= [];
+		var i,t = contractData["terms"].split("+");  // take the URL terms .eg A1+C2.3+D5 etc ==> ["A1","C2.3", "D5"]
+		for (i=0; i<t.length; i++ ) {
+			var cl = findClause(t[i],gPageData["mosla-terms"]["clauses"]);// using the terms as IDs get the real clause info by looking it up in the clause database
+			gPageData.contractData["terms-data"].push(cl);
+		}
+		//at this point we've found all the clauses.  A complete JSON form of the contract is avaliable (and exportable) in gPageData.contractData
+
+		//generate HTML version of the contract
+		gPageData.contractHTML = renderContractHTML(gPageData.contractData);
+
+		//this renders it to the page
+		bw.DOM("#contract",bw.html(["div",{class:"bw-col-7"},gPageData.contractHTML]));
+	});
+
+
+	// render the contract to the page.  Note that we could use any library react/jQuery/document.getElement etc to do this 
 	bw.DOM("#cdate",(new Date()).getFullYear().toString() );
 	
 </script>

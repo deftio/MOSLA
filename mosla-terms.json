@@ -15,8 +15,8 @@
 			"clause-name"  		: "End User Data Permissions",
 			"clause-ID"			: "A1",
 			"clause-version"	: "01x1",
-			"clause-short-desc" : "short desc",
-			"clause-long-desc"  : "long desc",
+			"clause-short-desc" : "Party1 will not resell any data from Party2 for any purpose except for court mandated legal proceedings.",
+			"clause-long-desc"  : "Party1 will not collect any data from Party2 for any purpose except for court mandated legal proceedings. This includes cookies, likeness, user application usage data, personally identifiable user data and related information.",
 			"clause-legal-hist" : []
 		}
 	]
