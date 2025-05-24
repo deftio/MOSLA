@@ -105,6 +105,46 @@
             </div>
         </div>
 
+        <div class="section" id="clause-generator">
+            <h2>MOSLA Clause Library & URL Generator</h2>
+            <p class="lead text-center">Select clauses from the library, enter party names, and generate a shareable MOSLA URL.</p>
+            
+            <div id="clause-load-error" class="alert alert-danger" style="display:none;"></div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="party1-name">Party 1 Name:</label>
+                        <input type="text" class="form-control" id="party1-name" value="YourCompany">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="party2-name">Party 2 Name:</label>
+                        <input type="text" class="form-control" id="party2-name" value="YourClient">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group form-check mb-3">
+                <input type="checkbox" class="form-check-input" id="select-all-clauses">
+                <label class="form-check-label" for="select-all-clauses">Select/Deselect All Clauses</label>
+            </div>
+
+            <div id="clause-library-display" class="row">
+                <!-- Clauses will be loaded here by JavaScript -->
+            </div>
+
+            <button id="generate-url-btn" class="btn btn-success mt-3 mb-2">Generate MOSLA URL</button>
+            
+            <div class="form-group">
+                <label for="generated-mosla-url">Generated URL:</label>
+                <textarea id="generated-mosla-url" class="form-control" rows="3" readonly></textarea>
+            </div>
+            <a id="open-generated-url-in-demo" href="#" class="btn btn-info mb-3" target="_blank" style="display:none;">Open Generated URL in Demo</a>
+        </div>
+
+
         <div class="section bg-light" id="faq">
             <h2>Frequently Asked Questions</h2>
             <div class="accordion" id="faqAccordion">
@@ -163,5 +203,103 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const clauseLibraryDisplay = document.getElementById('clause-library-display');
+            const clauseLoadError = document.getElementById('clause-load-error');
+            const party1Input = document.getElementById('party1-name');
+            const party2Input = document.getElementById('party2-name');
+            const generateUrlBtn = document.getElementById('generate-url-btn');
+            const generatedUrlTextarea = document.getElementById('generated-mosla-url');
+            const openGeneratedUrlLink = document.getElementById('open-generated-url-in-demo');
+            const selectAllCheckbox = document.getElementById('select-all-clauses');
+
+            function displayError(message) {
+                clauseLoadError.textContent = 'Error: ' + message;
+                clauseLoadError.style.display = 'block';
+                clauseLibraryDisplay.innerHTML = ''; // Clear any partial content
+            }
+
+            function displayClauses(clausesData) {
+                if (!clausesData || !clausesData.clauses || !Array.isArray(clausesData.clauses)) {
+                    displayError('Clause data is not in the expected format or is missing.');
+                    return;
+                }
+                clauseLibraryDisplay.innerHTML = ''; // Clear previous content or loading messages
+
+                clausesData.clauses.forEach((clause, index) => {
+                    const cardHtml = `
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">${clause['clause-name'] || 'Unnamed Clause'}</h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">ID: ${clause['clause-ID'] || 'N/A'}</h6>
+                                    <p class="card-text">${clause['clause-short-desc'] || 'No short description available.'}</p>
+                                    <div class="form-check">
+                                        <input class="form-check-input clause-checkbox" type="checkbox" value="${clause['clause-ID']}" id="clause-check-${index}">
+                                        <label class="form-check-label" for="clause-check-${index}">
+                                            Select this clause
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    clauseLibraryDisplay.insertAdjacentHTML('beforeend', cardHtml);
+                });
+            }
+
+            async function fetchClauses() {
+                try {
+                    const response = await fetch('./mosla-terms.json');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status} while fetching mosla-terms.json`);
+                    }
+                    const clausesData = await response.json();
+                    displayClauses(clausesData);
+                } catch (error) {
+                    console.error('Failed to fetch or parse clauses:', error);
+                    displayError(error.message || 'Could not load clauses from mosla-terms.json.');
+                }
+            }
+
+            function generateUrl() {
+                const selectedClauses = [];
+                document.querySelectorAll('.clause-checkbox:checked').forEach(checkbox => {
+                    selectedClauses.push(checkbox.value);
+                });
+
+                const party1 = encodeURIComponent(party1Input.value.trim());
+                const party2 = encodeURIComponent(party2Input.value.trim());
+                const terms = selectedClauses.join('+');
+
+                if (!terms) {
+                    generatedUrlTextarea.value = 'Please select at least one clause.';
+                    openGeneratedUrlLink.style.display = 'none';
+                    return;
+                }
+
+                const baseUrl = './MOSLA.html';
+                const finalUrl = `${baseUrl}?terms=${terms}${party1 ? '&party1=' + party1 : ''}${party2 ? '&party2=' + party2 : ''}`;
+                
+                generatedUrlTextarea.value = finalUrl;
+                openGeneratedUrlLink.href = finalUrl;
+                openGeneratedUrlLink.style.display = 'inline-block';
+            }
+            
+            function toggleSelectAll() {
+                const checkboxes = document.querySelectorAll('.clause-checkbox');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = selectAllCheckbox.checked;
+                });
+            }
+
+            fetchClauses(); // Initial fetch of clauses
+            generateUrlBtn.addEventListener('click', generateUrl);
+            selectAllCheckbox.addEventListener('change', toggleSelectAll);
+        });
+    </script>
+
 </body>
 </html>
