@@ -113,37 +113,49 @@
 		htm += bw.html(["div","",contract["preamble"]]);
 		htm += "<br><br>";
 		try {
-			if (contract["terms"] == "demo") { // show a demo contract, in future it just shows randomized real clauses
-				for (j=0; j<7; j++ ) 
-				htm += clause2html(
-					{
-						index:j,  // enumerated clause number
-						ID: "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[j%26]+bw.random(0,15),    // ID of the clause, comes from URL, must match exactly a clause in the approved clause dict
-						name: bw.loremIpsum(bw.random(15,45),bw.random(18,240),true), // name of the clause
-						desc: bw.loremIpsum(bw.random(125,533),0,true) // description of the clause (body with legal language)
-					});
-			}
-			else  { // real contract terms rendered here
-
-			 	for (j=0; j<contract["terms-data"].length; j++ ) {
-					var cl = contract["terms-data"][j];
-					if (cl != null) {  // if we found it.
-						htm += clause2html( // render it
-							{
-								index:j,  // enumerated clause number in this contract e.g. "2"
-								ID: cl["clause-ID"],    // ID of the clause, comes from URL, must match exactly a clause in the approved clause dict
-								name: cl["clause-name"] , // name of the clause
-								desc: cl["clause-long-desc"] // description of the clause (body with legal language)
-							});			
-
+			// If terms=demo or terms is empty, show a predefined set of real clauses
+			if (contract["terms"] == "demo" || contract["terms"] == "") { 
+				var demoClauseIds = ['A1', 'A2', 'B1', 'C1', 'D1', 'X99']; // X99 is for testing missing clause
+				var k; // separate index for demo clauses shown
+				for (k=0; k < demoClauseIds.length; k++ ) {
+					var cl = findClause(demoClauseIds[k], gPageData["mosla-terms"]["clauses"]);
+					if (cl) {
+						htm += clause2html({
+							index: k, // Use k for numbering demo clauses shown
+							ID: cl["clause-ID"],
+							name: cl["clause-name"],
+							desc: cl["clause-long-desc"] // Use long description for the main content
+						});
+					} else {
+						// Gracefully handle if a demo clause ID is not found
+						htm += "<p style='color:orange;'><em>Clause with ID '"+ demoClauseIds[k] +"' not found in mosla-terms.json.</em></p><br>";
 					}
-					else
-						throw(t[j]+"clause-ID lookup failed")
+				}
+			}
+			else  { // Real contract terms rendered here based on URL parameters
+				var urlClauseIds = contract["terms"].split("+"); // Keep 't' as original for error reporting if needed
+			 	for (j=0; j<contract["terms-data"].length; j++ ) { // contract["terms-data"] is already populated based on URL
+					var cl = contract["terms-data"][j];
+					if (cl != null) {  // If we found it.
+						htm += clause2html( // Render it
+							{
+								index:j,  // Enumerated clause number in this contract e.g. "2"
+								ID: cl["clause-ID"],    // ID of the clause, comes from URL
+								name: cl["clause-name"] , // Name of the clause
+								desc: cl["clause-long-desc"] // Description of the clause (body with legal language)
+							});			
+					}
+					else {
+						// Throw an error or display a message for the specific clause that failed to load
+						// The original code threw a generic error; let's make it specific to the missing clause ID from URL
+						htm+=bw.html(["h4",{style:"color:red;font-weight:700"},"<br>Error: Clause ID '"+ urlClauseIds[j] +"' not found."]);
+					}
 				}
 			}
 		}
 		catch(e) { 
-			htm+=bw.html(["h2",{style:"color:red,font-weight:700"},"<br>Error Contract Terms error or mismatch." + e.toString()])
+			// Catch any other unforeseen errors during rendering
+			htm+=bw.html(["h2",{style:"color:red;font-weight:700"},"<br>Error rendering contract terms: " + e.toString()])
 		}
 		htm += bw.htmla(contract["signing"]);
 		return htm;
@@ -176,22 +188,41 @@
 
 	//============================
 	// now load the tersm file (its in mosla-terms.json in this demo). Once we get that we render the contract in the callback function
-	bw.getFile("mosla-terms.json",function(x){
-		gPageData["mosla-terms"]=x; 
-		try{x=JSON.parse(x); gPageData["mosla-terms"]=x; }catch(e){console.log(e)}
-		gPageData.contractData["terms"] 		= bw.getURLParam("terms","");
-		gPageData.contractData["terms-data"] 	= [];
-		var i,t = contractData["terms"].split("+");  // take the URL terms .eg A1+C2.3+D5 etc ==> ["A1","C2.3", "D5"]
-		for (i=0; i<t.length; i++ ) {
-			var cl = findClause(t[i],gPageData["mosla-terms"]["clauses"]);// using the terms as IDs get the real clause info by looking it up in the clause database
-			gPageData.contractData["terms-data"].push(cl);
+	bw.getFile("mosla-terms.json",function(jsonData){
+		gPageData["mosla-terms"]=jsonData; 
+		try{ 
+			var parsedJson = JSON.parse(jsonData); 
+			gPageData["mosla-terms"] = parsedJson; 
+		} catch(e) {
+			console.error("Failed to parse mosla-terms.json:", e);
+			bw.DOM("#contract", "<p style='color:red;'>Error: Could not load or parse clause definitions (mosla-terms.json).</p>");
+			return; // Stop further processing if terms can't be loaded
 		}
-		//at this point we've found all the clauses.  A complete JSON form of the contract is avaliable (and exportable) in gPageData.contractData
+		
+		// Determine contract terms from URL, default to "" if not present (which will trigger demo mode)
+		gPageData.contractData["terms"] = bw.getURLParam("terms",""); 
 
-		//generate HTML version of the contract
+		// If not in demo/default mode, then populate terms-data from URL
+		if (gPageData.contractData["terms"] !== "demo" && gPageData.contractData["terms"] !== "") {
+			gPageData.contractData["terms-data"] = [];
+			var urlClauseIds = gPageData.contractData["terms"].split("+");
+			for (var i=0; i<urlClauseIds.length; i++ ) {
+				if (urlClauseIds[i]) { // Ensure non-empty string from split
+					var cl = findClause(urlClauseIds[i], gPageData["mosla-terms"]["clauses"]);
+					gPageData.contractData["terms-data"].push(cl); // cl will be null if not found
+				}
+			}
+		}
+		// Else, for demo/default mode, terms-data is not pre-populated here; renderContractHTML will handle it.
+		
+		//At this point, gPageData["mosla-terms"] should be populated with parsed JSON.
+		//gPageData.contractData["terms"] holds the string from the URL (or "" or "demo").
+		//gPageData.contractData["terms-data"] is populated if specific terms were in URL.
+
+		//Generate HTML version of the contract
 		gPageData.contractHTML = renderContractHTML(gPageData.contractData);
 
-		//this renders it to the page
+		//This renders it to the page
 		bw.DOM("#contract",bw.html(["div",{class:"bw-col-7"},gPageData.contractHTML]));
 	});
 
