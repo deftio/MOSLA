@@ -22,11 +22,11 @@
 <div  class="bw-container">
 	<div class="bw-col-12">
 		<br>		
-		<div class="bw-col-8;" style="; height:100px;"> 
-				<div style="background-image:url('icon/MOSLA.png');  background-repeat: no-repeat; width: 100%; height:100%;  background-size: contain; background-position: center center: " class="bw-col-4"></div>
+		<div class="bw-col-8;" style="height:100px; overflow:hidden;"> <!-- Added overflow:hidden to contain floats -->
+				<div style="background-image:url('icon/MOSLA.png');  background-repeat: no-repeat; width: 100%; height:100%;  background-size: contain; background-position: center center; float:left; margin-right: 15px;" class="bw-col-4"></div>
 			
-			<h1>MOSLA : Modular Open Service License Agreement (Demo)</h1>
-		</div><br><br><br><br>
+			<h1 style="text-align: left; margin-top: 20px;">MOSLA : Modular Open Service License Agreement (Demo)</h1> <!-- Added text-align:left and adjusted margin -->
+		</div><br style="clear:both;"/><br><br><br> <!-- Added clear:both to the first br -->
 		<br>
 		<div id=contract></div>
 		<br>
@@ -72,9 +72,10 @@
 	var findClause = function(clauseID, clauseArray) {
 		var x, r=null;
 		for (x=0; x< clauseArray.length; x++) {
-			if (clauseID == clauseArray[x]["clause-ID"])
+			if (clauseID == clauseArray[x]["clause-ID"]) {
 				r = clauseArray[x];
-				break;
+				break; // Correctly placed inside the if block
+			}
 		}
 		return r;
 	}
@@ -109,7 +110,7 @@
 	var renderContractHTML = function (contract) {
 
 		var htm = "",j,t;
-		htm += bw.html(["h2","",contract["title"]]);
+		htm += bw.html(["h2",{style:"text-align:left;"},contract["title"]]); // Ensure contract title is left-aligned
 		htm += bw.html(["div","",contract["preamble"]]);
 		htm += "<br><br>";
 		try {

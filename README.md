@@ -4,7 +4,7 @@
 
 # MOSLA - Modular Open Services License Agreement
 
-MOSLA is a compentized framework for End User License Agreements and some similar standardized agreement contracts which has compentized the different types of clausese that the two parties agree to.  
+Navigating legal agreements for online services can be complex, often involving dense, custom-written documents that are difficult to understand and standardize. MOSLA (Modular Open Services License Agreement) addresses this challenge by providing an open, **standardized**, and **component-based framework**. It allows for the construction of clear, predictable contracts—such as End User License Agreements (EULAs) and service agreements—by selecting from a library of pre-defined, community-vetted clauses. This modular approach simplifies agreement creation and comprehension, with the added benefit of agreements being easily shareable and embeddable via a simple URL.
 
 
 ## Features
@@ -39,13 +39,8 @@ A: As long as the clause addresses the same type of contractual issues, then the
 
 Much work has been done on standardizing various agreements in industry.  Please visit the Open Source foundation (www.opensource.org) for how this has been done for copy left software.
 
-
+We also thank our [Contributors](contributors.md).
 
 ## License
 
 (OSI Approved BSD 2-clause)
-
-## Contributers
-
-Manjirnath A Chatterjee  
-Kona F Pance

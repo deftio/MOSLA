@@ -8,10 +8,11 @@
     <style>
         body { padding-top: 20px; }
         .hero-section { text-align: center; padding: 50px 0; background-color: #f8f9fa; }
+        /* Main hero H1 ("Welcome to MOSLA") will remain centered due to .hero-section styling, as this is a common design pattern. */
         .hero-section h1 { margin-bottom: 20px; }
         .hero-section p { margin-bottom: 30px; font-size: 1.25rem; }
         .section { padding: 40px 0; }
-        .section h2 { text-align: center; margin-bottom: 40px; }
+        .section h2 { text-align: left; margin-bottom: 40px; } /* Changed from center to left */
         .footer { text-align: center; padding: 20px 0; background-color: #343a40; color: white; }
         .logo { max-width: 100px; margin-bottom: 20px; }
     </style>
@@ -21,7 +22,7 @@
         <div class="hero-section">
             <img src="./icon/MOSLA.png" alt="MOSLA Logo" class="logo">
             <h1>Welcome to MOSLA</h1>
-            <p class="lead">The Modular Open Services License Agreement framework simplifies how we create and understand service agreements.</p>
+            <p class="lead">Say goodbye to complex, bespoke legal documents. MOSLA provides a clear, modular, and standardized way to build and share service agreements for the digital age.</p>
             <a href="./MOSLA.html?terms=demo" class="btn btn-primary btn-lg">See a Demo</a>
         </div>
 
@@ -29,8 +30,8 @@
             <h2>What is MOSLA?</h2>
             <div class="row">
                 <div class="col-md-6">
-                    <p>MOSLA offers a standardized, component-based approach to service agreements. Instead of dense, hard-to-read documents, MOSLA breaks down agreements into understandable clauses. Each clause has fixed attributes, making it easy to grasp the terms quickly.</p>
-                    <p>This innovative approach means agreements can be fully described and shared via a URL. For example: <code>./MOSLA.html?clauses=A1.02+C14.02+D01.11&party1=John.Smith&party2=ABCorp</code> (Note: parameters like 'clauses' are illustrative; the demo uses 'terms').</p>
+                    <p>Traditional service agreements are often lengthy, custom-tailored, and filled with legalese, making them hard for users to understand and for businesses to manage consistently. MOSLA tackles this by offering a <strong>standardized, component-based solution</strong>. It reimagines agreements as a collection of modular, human-readable clauses. Each clause focuses on a specific aspect of the agreement and has defined attributes, allowing anyone to quickly understand the terms. This approach significantly enhances clarity and reduces ambiguity.</p>
+                    <p>A key innovation of MOSLA is its ability to represent entire agreements as a URL. This makes sharing, referencing, and embedding agreements incredibly straightforward and portable. For instance, a complete EULA can be defined by a URL like <code>./MOSLA.html?terms=A1+C2.3&party1=MyCompany&party2=YourName</code>, ensuring both parties have an immutable, easily accessible record of the terms they've agreed to. This is particularly powerful for online services, email confirmations, and digital record-keeping.</p>
                 </div>
                 <div class="col-md-6">
                     <img src="https://via.placeholder.com/450x250" alt="MOSLA Concept" class="img-fluid rounded">
@@ -144,7 +145,6 @@
             <a id="open-generated-url-in-demo" href="#" class="btn btn-info mb-3" target="_blank" style="display:none;">Open Generated URL in Demo</a>
         </div>
 
-
         <div class="section bg-light" id="faq">
             <h2>Frequently Asked Questions</h2>
             <div class="accordion" id="faqAccordion">
@@ -197,7 +197,7 @@
     <footer class="footer">
         <p>&copy; <script>document.write(new Date().getFullYear())</script> MOSLA - Deftio. All rights reserved. <a href="https://www.deftio.com/mosla" style="color:white;">Deftio MOSLA Page</a></p>
         <p><a href="https://opensource.org/licenses/BSD-2-Clause"><img src="https://img.shields.io/badge/License-BSD%202--Clause-blue.svg" alt="License" /></a></p>
-        <p>Contributors: Manjirnath A Chatterjee, Kona F Pance</p>
+        <p>See our list of <a href="contributors.md" style="color:white; text-decoration:underline;">Contributors</a>.</p>
     </footer>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -300,6 +300,5 @@
             selectAllCheckbox.addEventListener('change', toggleSelectAll);
         });
     </script>
-
 </body>
 </html>
